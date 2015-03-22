@@ -73,5 +73,6 @@ definidor!(-)
 definidor!(*)
 definidor!(/)
 definidor!(^)
+==(x::Intervalo,y::Intervalo) = (x.a==y.a && x.b==y.b) ? true : false
 
 end
