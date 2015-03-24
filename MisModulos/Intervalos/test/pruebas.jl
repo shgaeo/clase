@@ -1,9 +1,11 @@
 using Intervalos,FactCheck
 
 facts("Probando tipo Intervalo") do
-    interv1=Intervalo(-1.0,4.0)
+    interv1=Intervalo("0.1")
     @fact typeof(interv1.a) => BigFloat 
-    @fact interv1 => Intervalo("-1.0",4) #verifico que convierta cadena de caracteres
+    @fact Intervalo("4","3") => Intervalo(3,4)
+    @fact -Intervalo("4","3") => Intervalo(-4.0,-3.0)
+    @fact interv1 => Intervalo(1//10) #verifico que convierta cadena de caracteres y racionales
     interv2=Intervalo("0.1",10//3)
     numero1=with_rounding(BigFloat,RoundDown) do
             BigFloat("0.1")
