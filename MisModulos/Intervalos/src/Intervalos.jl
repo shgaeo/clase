@@ -3,7 +3,7 @@
 module Intervalos
 
 import Base.show
-import Base.+,Base.-,Base.*,Base./,Base.^
+import Base.+,Base.-,Base.*,Base./,Base.^,Base.==,Base.in
 
 export Intervalo
 
@@ -76,5 +76,6 @@ definidor!(*)
 definidor!(/)
 definidor!(^)
 ==(x::Intervalo,y::Intervalo) = (x.a==y.a && x.b==y.b) ? true : false
+in(x,y::Intervalo) = (y.a<=Intervalo(x).a && Intervalo(x).b<=y.b) ? true : false
 
 end
