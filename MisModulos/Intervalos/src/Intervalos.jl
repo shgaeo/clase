@@ -72,6 +72,7 @@ end
 
 definidor!(+)
 definidor!(-)
+-(x::Intervalo) = x * -1
 definidor!(*)
 definidor!(/)
 definidor!(^)
