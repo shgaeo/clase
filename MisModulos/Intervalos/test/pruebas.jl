@@ -13,7 +13,8 @@ facts("Probando tipo Intervalo") do
         end
     @fact interv2.a => numero1 #verifico que haga bien el redondeo
     @fact interv2.b => numero2 #verifico que haga bien el redondeo
-    @fact Intervalo("0.2","0.2").a => less_than(Intervalo("0.2","0.2").b) #verifico que haga bien el redondeo
+    @fact Intervalo("0.2").a => less_than(Intervalo("0.2").b) #verifico que haga bien el redondeo
+    @fact in("0.1",Intervalo("0.1")) => true
 end
 
 facts("Probando operaciones entre intervalos")do
