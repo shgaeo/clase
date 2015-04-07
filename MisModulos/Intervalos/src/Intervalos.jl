@@ -4,6 +4,7 @@ module Intervalos
 
 import Base.show
 import Base.+,Base.-,Base.*,Base./,Base.^,Base.==,Base.in
+import Base.exp, Base.log, Base.atan, Base.asin, Base.acos
 
 export Intervalo
 
@@ -45,6 +46,18 @@ function redonDOWN(f::Function,x,y)
     end
 end
 
+function redonUP(f::Function,x)
+    with_rounding(BigFloat,RoundUp) do 
+        f(BigFloat(x))
+    end
+end
+
+function redonDOWN(f::Function,x)
+    with_rounding(BigFloat,RoundDown) do 
+        f(BigFloat(x))
+    end
+end
+
 function definidor!(f::Function)  #función que define operaciones entre intervalos
     if f!=^
         f(x::Intervalo,y::Intervalo) = (f==/ && y.a<0.0 && y.b>0.0) ? error("El intervalo divisor no puede contener al cero") :
@@ -76,7 +89,16 @@ definidor!(-)
 definidor!(*)
 definidor!(/)
 definidor!(^)
+
 ==(x::Intervalo,y::Intervalo) = (x.a==y.a && x.b==y.b) ? true : false
 in(x,y::Intervalo) = (y.a<=Intervalo(x).a && Intervalo(x).b<=y.b) ? true : false
+exp(x::Intervalo)=Intervalo(redonDOWN(exp,x.a),redonUP(exp,x.b))
+log(x::Intervalo)= x.a<0 ? error("Función log no acepta números negativos \n") : Intervalo(redonDOWN(log,x.a),redonUP(log,x.b))
+atan(x::Intervalo)=Intervalo(redonDOWN(atan,x.a),redonUP(atan,x.b))
+asin(x::Intervalo)=
+        x.a<-1||x.b>1 ? error("Función asin solo acepta números entre -1 y 1 \n") : Intervalo(redonDOWN(asin,x.a),redonUP(asin,x.b))
+acos(x::Intervalo)=
+        x.a<-1||x.b>1 ? error("Función acos solo acepta números entre -1 y 1 \n") : Intervalo(redonDOWN(acos,x.b),redonUP(acos,x.a))
+^(x::Intervalo,y)=exp(y*log(x))
 
 end
