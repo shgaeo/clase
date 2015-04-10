@@ -1,0 +1,4 @@
+xrandr --output HDMI1 --auto
+xrandr --output HDMI1 --right-of LVDS1
+xrandr --output HDMI1 --mode 800x600
+xrandr --output HDMI1 --rotate left
