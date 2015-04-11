@@ -6,7 +6,7 @@ import Base.show
 import Base.+,Base.-,Base.*,Base./,Base.^,Base.==,Base.in
 import Base.exp, Base.log, Base.atan, Base.asin, Base.acos
 
-export Intervalo
+export Intervalo, redonUP, redonDOWN
 
 type Intervalo
     a::BigFloat
