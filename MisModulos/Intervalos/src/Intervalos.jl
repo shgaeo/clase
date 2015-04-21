@@ -29,6 +29,8 @@ end
 
 Intervalo(a,b)=Intervalo(redonDOWN(a),redonUP(b)) #Con esta definición puedo usar como argumento cadenas de caracteres
                                                     # tomando en cuenta el redondeo
+                                                    
+
 Intervalo(a)=Intervalo(a,a)
 
 show(io::IO, a::Intervalo) = print(io::IO, "[$(a.a),
@@ -92,6 +94,7 @@ definidor!(^)
 
 ==(x::Intervalo,y::Intervalo) = (x.a==y.a && x.b==y.b) ? true : false
 in(x,y::Intervalo) = (y.a<=Intervalo(x).a && Intervalo(x).b<=y.b) ? true : false
+in(x::Intervalo,y::Intervalo) = in(x.a,y) && in(x.b,y)
 exp(x::Intervalo)=Intervalo(redonDOWN(exp,x.a),redonUP(exp,x.b))
 log(x::Intervalo)= x.a<0 ? error("Función log no acepta números negativos \n") : Intervalo(redonDOWN(log,x.a),redonUP(log,x.b))
 atan(x::Intervalo)=Intervalo(redonDOWN(atan,x.a),redonUP(atan,x.b))
