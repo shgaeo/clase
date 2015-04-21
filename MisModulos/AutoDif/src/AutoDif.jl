@@ -2,6 +2,8 @@
 
 module AutoDif
 
+using Intervalos
+
 import Base.+,Base.-,Base.*,Base./,Base.^,Base.==,Base.in
 import Base.exp, Base.log, Base.sin, Base.cos, Base.tan
 
@@ -14,7 +16,7 @@ type ValorDeriv
 end
 
 ValorDeriv(valor)= ValorDeriv(valor,1.0)
-
+ValorDeriv(x::Intervalo)=ValorDeriv(x,Intervalo(1.0))
 
 +(x::ValorDeriv,y::ValorDeriv)=ValorDeriv(x.valor+y.valor , x.deriv+y.deriv) #defino la suma entre ValorDeriv
 +(x::Number,y::ValorDeriv)=ValorDeriv(x,0.0)+y #defino la suma número + ValorDeriv
@@ -22,7 +24,7 @@ ValorDeriv(valor)= ValorDeriv(valor,1.0)
 
 -(x::ValorDeriv,y::ValorDeriv)=ValorDeriv(x.valor-y.valor , x.deriv-y.deriv) #defino la resta entre ValorDeriv
 -(x::Number,y::ValorDeriv)=ValorDeriv(x,0.0)-y #defino la resta número - ValorDeriv
--(y::ValorDeriv,x::Number)=y-ValorDeriv(x,0.0) #defino la suma ValorDeriv - número
+-(y::ValorDeriv,x::Number)=y-ValorDeriv(x,-0.0) #defino la suma ValorDeriv - número
 
 *(x::ValorDeriv,y::ValorDeriv)=ValorDeriv(x.valor*y.valor , x.valor*y.deriv+x.deriv*y.valor) #defino producto entre ValorDeriv
 *(x::Number,y::ValorDeriv)=ValorDeriv(x,0.0)*y #defino producto ValorDeriv por número
