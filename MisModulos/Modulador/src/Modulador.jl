@@ -5,12 +5,18 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers
 
-export blazeMat, grayImage, preparaMonitor, canvas2ndScreen, monitor2
+export blazeMat, grayImage, preparaMonitor, canvas2ndScreen, monitor2, inicia, finaliza
 
 #El siguiente run es para preparar el 2do monitor (colocación, resolución y orientación)
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
-run(`bash /home/santiago/Documentos/Escuela-maestría/1er-semestre/Física-computacional/Clase/MisModulos/Modulador/src/PrepMonit1`)
+#run(`bash /home/atomosfrios/Documents/Cosas_Julia/LabAtomosFrios/Modulador/src/PrepMonit1`)
+dir=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","src")
+dir1=joinpath(dir,"PrepMonit1")
+dir2=joinpath(dir,"PrepMonit2")
+dir3=joinpath(dir,"PrepMonit3")
+dir4=joinpath(dir,"imagen")
 
+run(`bash $dir1`)
 
 #Las siguientes funciones las saqué del notebook 'Pruebas-004_(generarImagenesGrises)' en ~/Documentos/Cosas-Ijulia 
 
@@ -25,6 +31,7 @@ function blazeMat(nVer::Integer, nHor::Integer, dosPi::Integer, periodo::Integer
     end
     matInt
 end
+blazeMat(dosPi::Integer, periodo::Integer)=blazeMat(600, 800, dosPi, periodo)
 
 function grayImage(matInt::Array{Int64,2})
     nVer=size(matInt)[1]
@@ -38,18 +45,40 @@ function grayImage(matInt::Array{Int64,2})
     Image(matGray)
 end
 
-# Esta constante es el canvas (imagen) del segundo monitor, por lo que los run son para abrirlo en el 2do monitor
-run(`bash /home/santiago/Documentos/Escuela-maestría/1er-semestre/Física-computacional/Clase/MisModulos/Modulador/src/PrepMonit2`)
-sleep(1)
-const canvas2ndScreen=ImageView.view(grayImage(ones(Int64,800,600)))
+img1=ImageView.view(grayImage(ones(Int64,800,600)))
+destroy(toplevel(img1[1]))
+write_to_png(img1[1],dir4)
 
-run(`bash /home/santiago/Documentos/Escuela-maestría/1er-semestre/Física-computacional/Clase/MisModulos/Modulador/src/PrepMonit3`)
+
+println("Bienvenido al módulo que controla el SLM. ¡¡Recuerda correr la función finaliza al terminar tu sesión!!")
+run(`bash $dir2`)
+sleep(2)
+
+function inicia()
+    ##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
+    #const canvas2ndScreen=ImageView.view(grayImage(ones(Int64,800,600)))   # Esta constante es el canvas (imagen) del segundo monitor, por lo que los run son para abrirlo en el 2do monitor
+    #run(`bash $dir3`)
+    ##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
+
+    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
+    spawn(`eog --fullscreen $dir4 &`)
+    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
+end
 
 
 function monitor2(imagen::Image)
-    ImageView.view(canvas2ndScreen[1],imagen)
+    ##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
+    #ImageView.view(canvas2ndScreen[1],imagen)
+
+    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
+    img1=ImageView.view(imagen)
+    destroy(toplevel(img1[1]))
+    write_to_png(img1[1],dir4)
 end
 
+function finaliza()
+    run(`bash $dir3`)
+end
 
 
 end

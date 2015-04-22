@@ -1,1 +1,1 @@
-dconf load /org/ < ~/dconforg.dat
+dconf load /org/ < ~/.dconforg/dconforg.dat
