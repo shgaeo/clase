@@ -5,9 +5,9 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers
 
-export blazeMat, grayImage, preparaMonitor, canvas2ndScreen, monitor2, monitor2canvas, inicia, finaliza
+export blazeMat, grayImage, monitor2, inicia, finaliza#, canvas2ndScreen, monitor2canvas
 
-#El siguiente run es para preparar el 2do monitor (colocación, resolución y orientación)
+
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
 #run(`bash /home/atomosfrios/Documents/Cosas_Julia/LabAtomosFrios/Modulador/src/PrepMonit1`)
 dir=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","src")
@@ -17,7 +17,6 @@ dir2canvas=joinpath(dir,"PrepMonit2canvas")
 dir3=joinpath(dir,"PrepMonit3")
 dir4=joinpath(dir,"imagen")
 
-run(`bash $dir1`)
 
 #Las siguientes funciones las saqué del notebook 'Pruebas-004_(generarImagenesGrises)' en ~/Documentos/Cosas-Ijulia 
 
@@ -51,44 +50,54 @@ destroy(toplevel(img1[1]))
 write_to_png(img1[1],dir4)
 
 
-println("Bienvenido al módulo que controla el SLM. ¡¡Recuerda correr la función finaliza al terminar tu sesión!!")
-run(`bash $dir2canvas`)
-sleep(2)
-##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
-#const canvas2ndScreen=ImageView.view(grayImage(ones(Int64,800,600)))   
-    # Esta constante es el canvas (imagen) del segundo monitor, por lo que los run son para abrirlo en el 2do monitor
-##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
+println("Bienvenido al módulo que controla el SLM.
+    Para empezar utiliza la función inicia.
+    ¡¡Recuerda correr la función finaliza al terminar tu sesión!!")
 
-sleep(1)
 
-run(`bash $dir2`)
-sleep(2)
 function inicia()
-    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
+    #El siguiente run es para preparar el 2do monitor (colocación, resolución y orientación)    
+    run(`bash $(Modulador.dir1)`)
+    sleep(3)
+    #El siguiente run es para abrir EOG en 2do monitor Fullscreen  
+    run(`bash $(Modulador.dir2)`)
+    sleep(2)
+    ##### Esto es para versión con Eye of Gnome 
     spawn(`eog --fullscreen $dir4 &`)
-    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
+    ##### Esto es para versión con Eye of Gnome 
 end
 
 
 function monitor2(imagen::Image)
-    ##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
-    #ImageView.view(canvas2ndScreen[1],imagen)
-
-    ##### Esto es para versión con Eye of Gnome (asegurate de elegir la opción correcta en PrepMonit2)
-    img1=ImageView.view(imagen)
-    destroy(toplevel(img1[1]))
-    write_to_png(img1[1],dir4)
+    ##### Esto es para versión con Eye of Gnome
+    if size(imagen.data)==(800,600)
+        img1=ImageView.view(imagen)
+        destroy(toplevel(img1[1]))
+        write_to_png(img1[1],dir4)
+    else
+        error("Deben ser imágenes de 800x600")
+    end
 end
-
-function monitor2canvas(imagen::Image)
-    ##### Esto es para versión con Canvas (no fullscreen) (asegurate de elegir la opción correcta en PrepMonit2)
-    ImageView.view(canvas2ndScreen[1],imagen)
-end
-
 
 function finaliza()
-    run(`bash $dir3`)
+    img1=ImageView.view(grayImage(ones(Int64,800,600)))
+    destroy(toplevel(img1[1]))
+    write_to_png(img1[1],dir4)
+    run(`bash $(Modulador.dir3)`)
 end
+
+
+##### Esto es para versión con Canvas (no fullscreen)
+##### Esto es para versión con Canvas (no fullscreen) 
+#run(`bash $dir2canvas`)
+#const canvas2ndScreen=ImageView.view(grayImage(ones(Int64,800,600)))   
+    # Esta constante es el canvas (imagen) del segundo monitor, por lo que los run son para abrirlo en el 2do monitor
+
+#function monitor2canvas(imagen::Image)    
+#    ImageView.view(canvas2ndScreen[1],imagen)
+#end
+##### Esto es para versión con Canvas (no fullscreen) 
+##### Esto es para versión con Canvas (no fullscreen)
 
 
 end
