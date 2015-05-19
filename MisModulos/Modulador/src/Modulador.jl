@@ -24,14 +24,14 @@ dir4=joinpath(dir,"imagen")
 #La función grayImage toma como argumento una matriz de enteros de nVer × nHor(como la que genera blazeMat) y la convierte en una imagen.
 function blazeMat(nVer::Integer, nHor::Integer, dosPi::Integer, periodo::Integer)
     matInt=zeros(Int64,nHor,nVer)
-    for i=1:nVer
-        for j=1:nHor
-            matInt[j,i]=int64(   mod1(  (mod1(j,periodo) -periodo) *(dosPi-1)/(periodo-1)  , dosPi    )  )
+    for i=1:nHor
+        for j=1:nVer
+            matInt[i,j]=int64(   mod1(  (mod1(j,periodo) -periodo) *(dosPi-1)/(periodo-1)  , dosPi    )  )
         end
     end
     matInt
 end
-blazeMat(dosPi::Integer, periodo::Integer)=blazeMat(600, 800, dosPi, periodo)
+blazeMat(dosPi::Integer, periodo::Integer)=blazeMat(800, 600, dosPi, periodo)
 
 function grayImage(matInt::Array{Int64,2})
     nVer=size(matInt)[1]
@@ -45,7 +45,7 @@ function grayImage(matInt::Array{Int64,2})
     Image(matGray)
 end
 
-img1=ImageView.view(grayImage(ones(Int64,800,600)))
+img1=ImageView.view(grayImage(ones(Int64,600,800)))
 destroy(toplevel(img1[1]))
 write_to_png(img1[1],dir4)
 
@@ -70,7 +70,7 @@ end
 
 function monitor2(imagen::Image)
     ##### Esto es para versión con Eye of Gnome
-    if size(imagen.data)==(800,600)
+    if size(imagen.data)==(600,800)
         img1=ImageView.view(imagen)
         destroy(toplevel(img1[1]))
         write_to_png(img1[1],dir4)
@@ -80,7 +80,7 @@ function monitor2(imagen::Image)
 end
 
 function finaliza()
-    img1=ImageView.view(grayImage(ones(Int64,800,600)))
+    img1=ImageView.view(grayImage(ones(Int64,600,800)))
     destroy(toplevel(img1[1]))
     write_to_png(img1[1],dir4)
     run(`bash $(Modulador.dir3)`)
