@@ -100,4 +100,40 @@ end
 ##### Esto es para versión con Canvas (no fullscreen)
 
 
+
+### Las siguientes funciones las saqué del notebook 'Pruebas-006_(generarEstructuraHaces).ipynb' en ~/Documentos/Cosas-Ijulia
+
+function thetaMat(th) # th son los grados por los cuales se puede rotar el holograma
+    # esta función da una matriz cuyas entradas representan los ángulos (van de -π a π)
+    # recuerda que la convención para matrices es invertir eje Y, por eso valores negativos quedan arriba
+    x=integer(ones(600)*linspace(-399,400,800)')
+    y=integer(linspace(-299,300,600)*ones(800)')
+    xp=cos(th*π/180)*x-sin(th*π/180)*y # rotacion
+    yp=sin(th*pi/180)*x+cos(th*pi/180)*y
+    atan2(yp,xp) 
+end
+thetaMat()=thetaMat(0)
+
+function faseMatInt(z::Matrix,gray2pi::Int64,gray0::Int64)
+    # A esta función le das como argumento una matriz cualquiera y la convierte en una 
+    # matriz con entradas Int64 con valores que van desde gray0 hasta gray2pi
+    if gray0<1 || gray0>256
+        error("gray0 debe estar entre 1 y 256")
+    end
+    if gray2pi<1 || gray2pi>256
+        error("gray2pi debe estar entre 1 y 256")
+    end
+    if gray2pi<gray0
+        error("gray2pi debe ser mayor o igual que gray0")
+    end
+    #notemos que Gray{Ufixed8}(256)==Gray{Ufixed8}(0) -> true
+    z=(z-minimum(z))/(maximum(z-minimum(z))) # Normalizo de 0 a 1
+    z=((z)*(gray2pi-gray0)) #Renormalizo min=0 max=255
+    z=mod(z,256)+gray0 #Obtengo módulo, ahora min=gray0 y max=gray2pi
+    return(int64(z)) # finalmente convierto a enteros 
+end
+faseMatInt(z::Matrix)=faseMatInt(z,256,1) # si no especificas normaliza de 1 a 256 (gama entera de grises)
+faseMatInt(z::Matrix,gray2pi::Int64)=faseMatInt(z,gray2pi,1) # puedes solo especificar el tope superior
+
+
 end
