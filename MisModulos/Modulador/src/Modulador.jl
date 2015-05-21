@@ -146,8 +146,7 @@ function escalon(nVer::Integer, nHor::Integer, fondo::Integer, dosPi::Integer, p
         error("dosPi debe ser mayor o igual que fondo")
     end
     matInt=zeros(Int64,nHor,nVer)
-    #red=1 + mod(int64(linspace(1,nVer,nVer))-1,2*periodo)
-    red=dosPi*int64(mod(int64(linspace(1,nVer,nVer))-1,periodo)/(periodo))
+    red=fondo+(dosPi-fondo)*int64(mod(int64(linspace(1,nVer,nVer))-1,periodo)/(periodo))
     for i=1:nHor
         matInt[i,1:nVer]=red
     end
