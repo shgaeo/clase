@@ -5,7 +5,7 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers
 
-export blazeMat, grayImage, monitor2, inicia, finaliza#, canvas2ndScreen, monitor2canvas
+export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon #, canvas2ndScreen, monitor2canvas
 
 
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
@@ -135,5 +135,24 @@ end
 faseMatInt(z::Matrix)=faseMatInt(z,256,1) # si no especificas normaliza de 1 a 256 (gama entera de grises)
 faseMatInt(z::Matrix,gray2pi::Int64)=faseMatInt(z,gray2pi,1) # puedes solo especificar el tope superior
 
+function escalon(nVer::Integer, nHor::Integer, fondo::Integer, dosPi::Integer, periodo::Integer)
+    if fondo<1 || fondo>256
+        error("fondo debe estar entre 1 y 256")
+    end
+    if dosPi<1 || dosPi>256
+        error("dosPi debe estar entre 1 y 256")
+    end
+    if dosPi<fondo
+        error("dosPi debe ser mayor o igual que fondo")
+    end
+    matInt=zeros(Int64,nHor,nVer)
+    #red=1 + mod(int64(linspace(1,nVer,nVer))-1,2*periodo)
+    red=dosPi*int64(mod(int64(linspace(1,nVer,nVer))-1,periodo)/(periodo))
+    for i=1:nHor
+        matInt[i,1:nVer]=red
+    end
+    matInt
+end
+escalon(dosPi::Integer, periodo::Integer)=escalon(800,600,1,dosPi,periodo)
 
 end
