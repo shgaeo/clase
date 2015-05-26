@@ -77,6 +77,8 @@ function monitor2(imagen::Image)
     else
         error("Deben ser imágenes de 800x600")
     end
+    sleep(1.1) # esto es para que le dé tiempo de guardar y cambiar la imagen en eog Viewer
+    return nothing
 end
 
 function finaliza()
