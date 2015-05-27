@@ -188,6 +188,10 @@ function calibrarAux()
 end
 function finalizaCalib()
     dir8=joinpath(dirCal,".finalCalib")
+    f=open(dir8,"w") #abro archivo en modo write (sebreescribe lo que este)
+    dir9=joinpath(dirCal,"*--*.jpeg")
+    write(f,"rm $(dir9)")
+    close(f)
     run(`bash $(dir8)`)
 end
 
