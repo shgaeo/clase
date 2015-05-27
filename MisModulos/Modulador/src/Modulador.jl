@@ -3,9 +3,9 @@
 module Modulador
 
 using PyPlot, Images, ImageView
-using FixedPointNumbers
+using FixedPointNumbers, Dates
 
-export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon #, canvas2ndScreen, monitor2canvas
+export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg #, canvas2ndScreen, monitor2canvas
 
 
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
@@ -16,6 +16,7 @@ dir2=joinpath(dir,"PrepMonit2")
 dir2canvas=joinpath(dir,"PrepMonit2canvas")
 dir3=joinpath(dir,"PrepMonit3")
 dir4=joinpath(dir,"imagen")
+
 
 
 #Las siguientes funciones las saqué del notebook 'Pruebas-004_(generarImagenesGrises)' en ~/Documentos/Cosas-Ijulia 
@@ -155,5 +156,20 @@ function escalon(nVer::Integer, nHor::Integer, fondo::Integer, dosPi::Integer, p
     matInt
 end
 escalon(dosPi::Integer, periodo::Integer)=escalon(800,600,1,dosPi,periodo)
+
+### La siguiente función es para calibrar el SLM (no la exporto para no usarla cuando no es necesario)
+function calibrar()
+    for i=1:2
+        capturaImg(i)
+    end
+    #falta mucho por hacer
+end
+
+function capturaImg(n::Integer)
+    dir5=joinpath(dir,"webcamConfig")
+    dir6=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","calib",string(today())*"--$n.jpeg")
+    run(`fswebcam -c $(dir5) --save $(dir6)`)
+end
+
 
 end
