@@ -3,7 +3,9 @@
 quiet       # evito salida de texto con datos de config
 #verbose    # anulo quiet
 
-no-banner
+no-banner # Sin barra con info en foto
+
+greyscale # escala grises (r=g=b)
 
 # The image source - In this case we are capturing frames from a TV channel
 device     "v4l2:/dev/video0"

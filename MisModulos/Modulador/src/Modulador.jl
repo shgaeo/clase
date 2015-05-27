@@ -17,7 +17,7 @@ dir2canvas=joinpath(dir,"PrepMonit2canvas")
 dir3=joinpath(dir,"PrepMonit3")
 dir4=joinpath(dir,"imagen")
 
-
+const nombre_improbable_2pi=readdlm(joinpath(dir,"dospi"))[end]
 
 #Las siguientes funciones las saqué del notebook 'Pruebas-004_(generarImagenesGrises)' en ~/Documentos/Cosas-Ijulia 
 
@@ -79,7 +79,7 @@ function monitor2(imagen::Image)
         error("Deben ser imágenes de 800x600")
     end
     sleep(1.1) # esto es para que le dé tiempo de guardar y cambiar la imagen en eog Viewer
-    return nothing
+    return nothing  
 end
 
 function finaliza()
@@ -158,18 +158,51 @@ end
 escalon(dosPi::Integer, periodo::Integer)=escalon(800,600,1,dosPi,periodo)
 
 ### La siguiente función es para calibrar el SLM (no la exporto para no usarla cuando no es necesario)
+# Lo que hace es tomar una foto para cada nivel de la función escalón, luego se fija en la diferencia entre estas fotos
+# para saber con qué valor se regresa a la fase original (+2pi)
+dirCal=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","calib")
 function calibrar()
-    for i=1:2
+    println("Recuerda correr 'finalizaCalib()' al final para borrar imágenes")
+    println("Al finalizar la calibración debes reiniciar Julia para que se tomen en cuenta los cambios")
+    calibrarAux()
+    dir7=joinpath(dirCal,string(today()))
+    ima1=float(Images.green(Images.data(Images.imread(dir7*"--1.jpeg"))))
+    ima2=similar(ima1)
+    lista=zeros(256)
+    #lista=Array{Float64,2}[]
+    for i=2:5#256
+        ima2=float(Images.green(Images.data(Images.imread(dir7*"--$i.jpeg"))))
+        lista[i]=sum(abs(ima1-ima2))
+    end
+    nuevo2pi=length(lista)+1-findmin(reverse(lista))[2] # Lo recorro al revés para obtener el mínimo más alejado
+    f=open(joinpath(dir,"dospi"),"a") #abro archivo en modo append
+    write(f,"$(nuevo2pi) # "*string(now())*"\n")
+    close(f)    
+    return lista
+end
+function calibrarAux()
+    for i=1:5#256
+        monitor2(grayImage(escalon(i,20))) #falta saber si este es el periodo adecuado...
         capturaImg(i)
     end
-    #falta mucho por hacer
+end
+function finalizaCalib()
+    dir8=joinpath(dirCal,".finalCalib")
+    run(`bash $(dir8)`)
 end
 
-function capturaImg(n::Integer)
+### La siguiente función es para capturar imágenes, para configuración ver Modulador/src/webcamConfig
+function capturaImg(n::Integer) #ojo, esta solo sirve para calibrar, usa únicamente el otro método
     dir5=joinpath(dir,"webcamConfig")
-    dir6=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","calib",string(today())*"--$n.jpeg")
+    dir6=joinpath(dirCal,string(today())*"--$n.jpeg")
     run(`fswebcam -c $(dir5) --save $(dir6)`)
 end
+function capturaImg()
+    dir5=joinpath(dir,"webcamConfig")
+    dir6=joinpath(dirCal,string(now())*".jpeg")
+    run(`fswebcam -c $(dir5) --save $(dir6)`)
+end
+
 
 
 end
