@@ -182,7 +182,7 @@ function calibrar()
 end
 function calibrarAux()
     for i=1:5#256
-        monitor2(grayImage(escalon(i,20))) #falta saber si este es el periodo adecuado...
+        monitor2(grayImage(escalon(i,10))) #falta saber si este es el periodo adecuado...
         capturaImg(i)
     end
 end
