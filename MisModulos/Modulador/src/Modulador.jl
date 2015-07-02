@@ -5,7 +5,7 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers, Dates
 
-export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg #, canvas2ndScreen, monitor2canvas
+export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg, funBesselJ #, canvas2ndScreen, monitor2canvas
 
 
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
@@ -207,6 +207,17 @@ function capturaImg()
     run(`fswebcam -c $(dir5) --save $(dir6)`)
 end
 
+
+
+### Lo siguiente es para incluir función Bessel, lo seaqué del notebook 'Pruebas-006_(generarEstructuraHaces)'
+function funBesselJ(n,l,w,th)
+    x=integer(ones(600)*linspace(-399,400,800)')
+    y=integer(linspace(-299,300,600)*ones(800)')
+    xp=cos(th*π/180)*x-sin(th*π/180)*y # rotacion
+    yp=sin(th*pi/180)*x+cos(th*pi/180)*y
+    besselj(n,sqrt((xp.^2+yp.^2)/w^2)) .* exp(l*1im*atan2(yp,xp))
+end
+funBesselJ(n,l,w)=funBesselJ(n,l,w,0)
 
 
 end
