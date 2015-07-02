@@ -5,7 +5,7 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers, Dates
 
-export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg, funBesselJ #, canvas2ndScreen, monitor2canvas
+export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg, funBesselJ, rapidBesselJ #, canvas2ndScreen, monitor2canvas
 
 
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
@@ -219,5 +219,11 @@ function funBesselJ(n,l,w,th)
 end
 funBesselJ(n,l,w)=funBesselJ(n,l,w,0)
 
+function rapidBesselJ(n,l,w,th)
+    faseMatInt(angle(funBesselJ(n,l,w,th)))
+end
+function rapidBesselJ(n,l,w)
+    faseMatInt(angle(funBesselJ(n,l,w)))
+end
 
 end
