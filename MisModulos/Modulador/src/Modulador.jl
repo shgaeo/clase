@@ -183,7 +183,7 @@ end
 function calibrarAux()
     for i=1:5#256
         monitor2(grayImage(escalon(i,10))) #falta saber si este es el periodo adecuado...
-        capturaImg(i)
+        capturaImg2(i)
     end
 end
 function finalizaCalib()
@@ -196,14 +196,15 @@ function finalizaCalib()
 end
 
 ### La siguiente función es para capturar imágenes, para configuración ver Modulador/src/webcamConfig
-function capturaImg(n::Integer) #ojo, esta solo sirve para calibrar, usa únicamente el otro método
+function capturaImg2(n::Integer) #ojo, esta solo sirve para calibrar, usa únicamente el otro método
     dir5=joinpath(dir,"webcamConfig")
     dir6=joinpath(dirCal,string(today())*"--$n.jpeg")
     run(`fswebcam -c $(dir5) --save $(dir6)`)
 end
+dirCap=joinpath(LOAD_PATH[length(LOAD_PATH)],"Modulador","capturas")
 function capturaImg()
     dir5=joinpath(dir,"webcamConfig")
-    dir6=joinpath(dirCal,string(now())*".jpeg")
+    dir6=joinpath(dirCap,string(now())*".jpeg")
     run(`fswebcam -c $(dir5) --save $(dir6)`)
 end
 
