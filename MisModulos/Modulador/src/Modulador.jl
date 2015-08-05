@@ -5,7 +5,7 @@ module Modulador
 using PyPlot, Images, ImageView
 using FixedPointNumbers, Dates
 
-export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg, funBesselJ, rapidBesselJ #, canvas2ndScreen, monitor2canvas
+export blazeMat, grayImage, monitor2, inicia, finaliza, thetaMat, faseMatInt, escalon, capturaImg, funBesselJ, rapidBesselJ, thetaMatInt #, canvas2ndScreen, monitor2canvas
 
 
 #El contenido del archivo PrepMonit1 lo saqué del notebook 'Pruebas-003_(Imagenes)' en ~/Documentos/Cosas-Ijulia 
@@ -229,5 +229,14 @@ end
 function rapidBesselJ(n,l,w)
     faseMatInt(angle(funBesselJ(n,l,w)))
 end
+
+
+
+### Lo siguiente es para darle vórtice al haz para (junto con axicón) generar el Bessel
+function thetaMatInt(n,th)
+    mod(n*(faseMatInt(thetaMat(th))-1),256)+1
+end
+thetaMatInt(n)=thetaMatInt(n,0)
+
 
 end
