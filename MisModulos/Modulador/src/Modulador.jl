@@ -17,7 +17,7 @@ dir2canvas=joinpath(dir,"PrepMonit2canvas")
 dir3=joinpath(dir,"PrepMonit3")
 dir4=joinpath(dir,"imagen")
 
-const nombre_improbable_2pi=readdlm(joinpath(dir,"dospi"))[end]
+const nombre_improbable_2pi=readdlm(joinpath(dir,"dospi"),Int64)[end]
 
 #Las siguientes funciones las saqué del notebook 'Pruebas-004_(generarImagenesGrises)' en ~/Documentos/Cosas-Ijulia 
 
@@ -33,6 +33,7 @@ function blazeMat(nVer::Integer, nHor::Integer, dosPi::Integer, periodo::Integer
     matInt
 end
 blazeMat(dosPi::Integer, periodo::Integer)=blazeMat(800, 600, dosPi, periodo)
+blazeMat(periodo::Integer)=blazeMat(800, 600, nombre_improbable_2pi, periodo)
 
 function grayImage(matInt::Array{Int64,2})
     nVer=size(matInt)[1]
@@ -135,7 +136,7 @@ function faseMatInt(z::Matrix,gray2pi::Int64,gray0::Int64)
     z=mod(z,256)+gray0 #Obtengo módulo, ahora min=gray0 y max=gray2pi
     return(int64(z)) # finalmente convierto a enteros 
 end
-faseMatInt(z::Matrix)=faseMatInt(z,256,1) # si no especificas normaliza de 1 a 256 (gama entera de grises)
+faseMatInt(z::Matrix)=faseMatInt(z,nombre_improbable_2pi,1) # si no especificas normaliza de 1 a nombre_improbable_2pi (gama entera de grises)
 faseMatInt(z::Matrix,gray2pi::Int64)=faseMatInt(z,gray2pi,1) # puedes solo especificar el tope superior
 
 function escalon(nVer::Integer, nHor::Integer, fondo::Integer, dosPi::Integer, periodo::Integer)
@@ -155,7 +156,9 @@ function escalon(nVer::Integer, nHor::Integer, fondo::Integer, dosPi::Integer, p
     end
     matInt
 end
+escalon(fondo::Integer, dosPi::Integer, periodo::Integer)=escalon(800,600,fondo,dosPi,periodo)
 escalon(dosPi::Integer, periodo::Integer)=escalon(800,600,1,dosPi,periodo)
+escalon(periodo::Integer)=escalon(800,600,1,nombre_improbable_2pi,periodo)
 
 ### La siguiente función es para calibrar el SLM (no la exporto para no usarla cuando no es necesario)
 # Lo que hace es tomar una foto para cada nivel de la función escalón, luego se fija en la diferencia entre estas fotos
@@ -170,7 +173,7 @@ function calibrar()
     ima2=similar(ima1)
     lista=zeros(256)
     #lista=Array{Float64,2}[]
-    for i=2:5#256
+    for i=2:256
         ima2=float(Images.green(Images.data(Images.imread(dir7*"--$i.jpeg"))))
         lista[i]=sum(abs(ima1-ima2))
     end
@@ -181,8 +184,8 @@ function calibrar()
     return lista
 end
 function calibrarAux()
-    for i=1:5#256
-        monitor2(grayImage(escalon(i,10))) #falta saber si este es el periodo adecuado...
+    for i=1:256
+        monitor2(grayImage(escalon(i,10))) #Este periodo permite ver los órdenes 0,1,2 en un CCD de webcam común
         capturaImg2(i)
     end
 end
