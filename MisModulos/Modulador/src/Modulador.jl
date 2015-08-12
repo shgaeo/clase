@@ -233,10 +233,11 @@ end
 
 
 ### Lo siguiente es para darle vórtice al haz para (junto con axicón) generar el Bessel
-function thetaMatInt(n,th)
-    mod(n*(faseMatInt(thetaMat(th))-1),nombre_improbable_2pi)+1
+function thetaMatInt(n,dospi,th)
+    mod(n*(faseMatInt(thetaMat(th))-1),dospi)+1
 end
-thetaMatInt(n)=thetaMatInt(n,0)
+thetaMatInt(n,dospi)=thetaMatInt(n,dospi,0)
+thetaMatInt(n)=thetaMatInt(n,nombre_improbable_2pi,0)
 
 
 end
